@@ -1,4 +1,4 @@
 
-public class test {
+public class test1 {
 private int x;
 }
