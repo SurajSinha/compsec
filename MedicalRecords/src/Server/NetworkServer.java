@@ -20,8 +20,10 @@ public class NetworkServer {
 	OutputStream out;
 	InputStream in;
 
-	public NetworkServer() {
-		// TODO Auto-generated constructor stub
+	Database db;
+	
+	public NetworkServer(Database db) {
+		this.db=db;
 	}
 
 	public void aa() {
@@ -33,15 +35,18 @@ public class NetworkServer {
 			s.setNeedClientAuth(true);
 			while (true) {
 				try {
+					System.out.println("dfgdf");
 					SSLSocket client = (SSLSocket) s.accept();
-
+					System.out.println("accept");
 					out = client.getOutputStream();
 					in = client.getInputStream();
 
 					SSLSession session = client.getSession();
+					System.out.println("getSession");
 					X509Certificate cert = (X509Certificate) session
 							.getPeerCertificateChain()[0];
-					String subject = cert.getSubjectDN().getName();
+					String subject = cert.getSubjectDN().getName();	
+					System.out.println("::"+subject);
 					//
 
 					while (true) {
@@ -49,7 +54,7 @@ public class NetworkServer {
 						int len = in.read();
 						byte[] data = read(len);
 						String str = new String(data);
-
+						System.out.println(str);
 						switch (type) {
 						case LOGIN:
 
@@ -60,6 +65,9 @@ public class NetworkServer {
 						case REQUEST:
 
 							if (true) {
+								
+								
+								
 								String text = "hello";
 								byte[] textdata = (text).getBytes();
 
@@ -92,7 +100,7 @@ public class NetworkServer {
 		byte[] b = new byte[len];
 		int bytesread = 0;
 		while (bytesread < len) {
-			in.read(b, bytesread, len - bytesread);
+			bytesread+=in.read(b, bytesread, len - bytesread);
 		}
 		return b;
 	}

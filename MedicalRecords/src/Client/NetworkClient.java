@@ -52,15 +52,13 @@ public class NetworkClient {
 		return false;
 	}
 	
-	byte[] read(int len) throws IOException
-	{
-		byte[] b=new byte[len];
-		int bytesread=0;
-		while(bytesread<len)
-		{
-			in.read(b, bytesread, len-bytesread);
+	byte[] read(int len) throws IOException {
+		byte[] b = new byte[len];
+		int bytesread = 0;
+		while (bytesread < len) {
+			bytesread+=in.read(b, bytesread, len - bytesread);
 		}
-		return b;		
+		return b;
 	}
 	
 	public String request(String name){
