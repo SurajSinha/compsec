@@ -10,17 +10,19 @@ import javax.net.ssl.SSLSocketFactory;
 public class NetworkClient {
 	private static final int REQUEST = 2;
 	private static final int LOGIN = 1;
+	private static final int PORT = 12345;
+	
 	private SSLSocket s;
 	private OutputStream out;
 	private InputStream in;
 	
 	public NetworkClient(){	
 	}
-	public boolean connect(String host, int port){
+	public boolean connect(String host){
 		 SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
 		 
 		try {
-			s=(SSLSocket)factory.createSocket(host, port);
+			s=(SSLSocket)factory.createSocket(host, PORT);
 			out=s.getOutputStream();
 			in=s.getInputStream();
 			return true;
