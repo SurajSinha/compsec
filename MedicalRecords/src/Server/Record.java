@@ -7,7 +7,7 @@ public class Record {
 	//Namn på doktor
 	//Sjukhus
 	//Diagnos
-	//Number;Name;Nurse;Doctor;Division;Diagnose;
+	//Number;Name;Division;Doctor;Nurse;Diagnose;
 	
 	
 	
@@ -47,8 +47,8 @@ public class Record {
 	}
 	
 	public String toSaveString(){
-		//Number;Name;Nurse;Doctor;Division;Diagnose;
-		return patientPersonnummer + ";" + patientNamn + ";" + sköterska + ";" + doktor + ";" + sjukhus + ";" + diagnos; 
+		//Number;Name;Divison;Doctor;Nurse;Diagnose;
+		return patientPersonnummer + ";" + patientNamn + ";" + sjukhus + ";" + doktor + ";" + sköterska + ";" + diagnos; 
 	}
 	
 	public void editNurse(String sköterska){

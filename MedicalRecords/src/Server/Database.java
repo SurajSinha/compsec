@@ -1,7 +1,11 @@
 package Server;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Database {
@@ -14,7 +18,7 @@ public class Database {
 	public Database(Log l){
 		this.list = new ArrayList<Record>();
 		this.log = l;
-		load();
+		//load();
 	}
 	
 	public void add(User u, Record r){
@@ -26,11 +30,16 @@ public class Database {
 		list.remove(index);
 		log.addEvent("DELETE", u.getName() + " (" + u.getPersonNumber()+") added a record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
 	}
-	public ArrayList<Record> viewAll(User u){
+	
+	public String viewSpecific(User u, int index){
+		return list.get(index).toString();
+	}
+	
+	public String viewAll(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
 		switch (u.getLevel()){
 			case User.GOVERNMENT_LEVEL:
-				return list;
+				return listString(list);
 			case User.DOCTOR_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
@@ -38,7 +47,7 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return temp;
+				return listString(temp);
 			case User.NURSE_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
@@ -46,7 +55,7 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return temp;
+				return listString(temp);
 			case User.PATIENT_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
@@ -54,14 +63,24 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return temp;
+				return listString(temp);
 			default:
 				return null;
 		}
 			
 	}
 	
-	public ArrayList<Record> viewAllEditable(User u){
+	private String listString(ArrayList<Record> temp) {
+		String header = "#\tPersonnummer\tPatient\t\tSjukhus\t\tDoktor\t\tSköterska\n";
+		StringBuilder sb = new StringBuilder();
+		for(int i=0;i<temp.size();i++){
+			Record r = temp.get(i);
+			sb.append(i+"\t"+r.patientPersonnummer+"\t"+r.patientNamn+"\t"+r.sjukhus+"\t\t"+r.doktor+"\t"+r.sköterska+"\n");
+		}
+		return header + sb;
+	}
+
+	public String viewAllEditable(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
 		switch (u.getLevel()){
 			case User.DOCTOR_LEVEL:
@@ -71,15 +90,40 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return temp;
+				return listString(temp);
 			default:
 				return null;
 		}
 	}
 	
 	public void load(){
-		
+		try{
+			FileInputStream fstream = new FileInputStream(fileName);
+			DataInputStream datastream = new DataInputStream(fstream);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(datastream));
+	
+			String stringLine = reader.readLine();
+			while (stringLine != null) {
+				parseLine(stringLine);
+				stringLine = reader.readLine();
+			}
+	
+			reader.close();
+			datastream.close();
+			fstream.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	
 	}
+	
+	private void parseLine(String stuff){
+		String[] data = stuff.split(";");
+		Record r = new Record(data[0],data[1],data[2],data[3],data[4],data[5]);
+		list.add(r);
+	}
+
+		
 	public void save(){
 		try {
 			FileWriter fileWriter = new FileWriter(fileName, false);
