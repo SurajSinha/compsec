@@ -1,5 +1,7 @@
 package Server;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Database {
@@ -26,7 +28,6 @@ public class Database {
 	}
 	public ArrayList<Record> viewAll(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
-		
 		switch (u.getLevel()){
 			case User.GOVERNMENT_LEVEL:
 				return list;
@@ -49,7 +50,7 @@ public class Database {
 			case User.PATIENT_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
-					if(tempRecord.patientPersonnummer == u.getPersonNumber()){
+					if(tempRecord.patientPersonnummer.equalsIgnoreCase(u.getPersonNumber())){
 						temp.add(tempRecord);
 					}
 				}
@@ -62,10 +63,38 @@ public class Database {
 	
 	public ArrayList<Record> viewAllEditable(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
-		return temp;
+		switch (u.getLevel()){
+			case User.DOCTOR_LEVEL:
+				for(int i=0;i<list.size();i++){
+					Record tempRecord = list.get(i);
+					if(tempRecord.doktor.equalsIgnoreCase(u.getName())){
+						temp.add(tempRecord);
+					}
+				}
+				return temp;
+			default:
+				return null;
+		}
 	}
 	
-	public void load(){}
-	public void save(){}
+	public void load(){
+		
+	}
+	public void save(){
+		try {
+			FileWriter fileWriter = new FileWriter(fileName, false);
+			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			//Number;Name;Nurse;Doctor;Division;Diagnose;
+			String save = "";
+			for(int i=0;i<list.size();i++){
+				save += list.get(i).toSaveString() + "\n";
+			}
+			bufferedWriter.write(save);
+
+			bufferedWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

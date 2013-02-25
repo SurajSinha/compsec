@@ -23,11 +23,10 @@ public class Record {
 	 * 9. 
 	 * 0. Exit
 	 */
-	protected int patientPersonnummer;
-	protected String patientNamn, sjukhus, sköterska;
-	private String doktor, diagnos;
+	protected String patientNamn, sjukhus, doktor, sköterska, patientPersonnummer;
+	private String diagnos;
 	
-	public Record(int pnummer, String pnamn, String sjukhus, String doktor, String sköterska, String diagnos){
+	public Record(String pnummer, String pnamn, String sjukhus, String doktor, String sköterska, String diagnos){
 		this.patientPersonnummer = pnummer;
 		this.patientNamn = pnamn;
 		this.sköterska = sköterska;
@@ -45,6 +44,11 @@ public class Record {
 				"------------------------------------------------------" +"\n" +
 				"Diagnos:\n" + diagnos +"\n" +
 				"------------------------------------------------------";
+	}
+	
+	public String toSaveString(){
+		//Number;Name;Nurse;Doctor;Division;Diagnose;
+		return patientPersonnummer + ";" + patientNamn + ";" + sköterska + ";" + doktor + ";" + sjukhus + ";" + diagnos; 
 	}
 	
 	public void editNurse(String sköterska){

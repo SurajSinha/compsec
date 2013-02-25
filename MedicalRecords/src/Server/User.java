@@ -11,17 +11,17 @@ public class User {
 	public static final int NURSE_LEVEL = 6;
 	public static final int PATIENT_LEVEL = 9;
 	
-	private String namn, sjukhus;
-	private int personnummer, level;
+	private String namn, sjukhus, personnummer;
+	private int level;
 	
 	
-	public User(int pnummer, String name, int accessNivå){
+	public User(String pnummer, String name, int accessNivå){
 		this.personnummer = pnummer;
 		this.namn = name;
 		this.level = accessNivå;
 	}
 	
-	public User(int pnummer, String name, int accessNivå, String sjukhus){
+	public User(String pnummer, String name, int accessNivå, String sjukhus){
 		this.personnummer = pnummer;
 		this.namn = name;
 		this.level = accessNivå;
@@ -32,7 +32,7 @@ public class User {
 		return level;
 	}
 	
-	public int getPersonNumber(){
+	public String getPersonNumber(){
 		return personnummer;
 	}
 
