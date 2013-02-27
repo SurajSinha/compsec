@@ -9,20 +9,6 @@ public class Record {
 	//Diagnos
 	//Number;Name;Division;Doctor;Nurse;Diagnose;
 	
-	
-	
-	/* Menu:
-	 * 1. List available records.
-	 * 2. Edit available records.
-	 * 3.
-	 * 4. Create new record.
-	 * 5. Delete a record.
-	 * 6.
-	 * 7. View log.
-	 * 8.
-	 * 9. 
-	 * 0. Exit
-	 */
 	protected String patientNamn, sjukhus, doktor, sköterska, patientPersonnummer;
 	private String diagnos;
 	

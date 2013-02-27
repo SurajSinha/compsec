@@ -60,7 +60,6 @@ public class NetworkServer {
 
 							int res = 1;//
 							out.write(res);
-
 							break;
 						case REQUEST:
 

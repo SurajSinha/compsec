@@ -55,7 +55,7 @@ public class Database {
 			case User.NURSE_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
-					if(tempRecord.sköterska.equalsIgnoreCase(u.getName())){
+					if(tempRecord.sjukhus.equalsIgnoreCase(u.getDivision())){
 						temp.add(tempRecord);
 					}
 				}
