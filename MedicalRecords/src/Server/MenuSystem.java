@@ -1,5 +1,7 @@
 package Server;
 
+import java.util.ArrayList;
+
 public class MenuSystem {
 	
 	/* Menu:
@@ -16,16 +18,28 @@ public class MenuSystem {
 	 */
 	
 	private int level;
-	private int location;
+	private int location, prevLocation;
+	private User currentUser;
+	private Database db;
+	private Log log;
+	private ArrayList<Record> lastList;
 	
-	public MenuSystem(int level){
-		this.level = level;
+	public MenuSystem(User u, Database db, Log l){
+		this.currentUser = u;
+		this.db = db;
+		this.level = u.getLevel();
+		this.log = l;
 		location = 0;
 	}
 	
-	public String getMenu(){
+	public String getMenu(ArrayList<Record> list){
+		//lastList = list;
 		//OK -> 1
 		String mainHeader = "Huvudmeny:\n"+
+							"--------------------------\n";
+		String recordHeader = "Lista över journaler:\n"+
+							  "--------------------------\n";
+		String logHeader = "Log:\n"+
 							"--------------------------\n";
 	
 		if(location == 0){
@@ -55,25 +69,111 @@ public class MenuSystem {
 					return "Error!";
 			}
 		}else if(location == 1){
-			return "";
+			return recordHeader + db.displayString(db.viewAll(currentUser));
+		}else if(location == 2){
+			return recordHeader + db.displayString(db.viewAllEditable(currentUser));
+		}else if(location == 5){
+			return recordHeader + db.displayString(db.viewAll(currentUser));
+		}else if(location == 7){
+			return logHeader + log.load();
 		}
 		return "";
 	}
 	
-	public void command(int val){
+	public String command(int val){
+		ArrayList<Record> tempList;
 		
-		if(isValidOption()){
-			if(location == 0){
-				location = val;
+		if(isValidOption(val) && location == 0){
+			if(val == 0){
+				if(location == 0){
+					//exit
+				}else if(location == -1){
+					location = prevLocation;
+				}else{
+					location = 0;
+				}
+			}else{
+				
+				if(location == 0){
+					location = val;
+					prevLocation = 0;
+				}else if(location == 1){
+					tempList = db.viewAll(currentUser);
+					if(val > tempList.size() || val < 1){
+						return "Felaktigt kommando!";
+					}else{
+						location = -1;
+						prevLocation = 1;
+						return db.viewSpecific(currentUser, tempList.get(val-1));
+					}
+				}else if(location == 2){
+					tempList = db.viewAllEditable(currentUser);
+					if(val > tempList.size() || val < 1){
+						return "Felaktigt kommando";
+					}else{
+						return db.viewSpecific(currentUser, tempList.get(val-1));
+					}
+				}else if(location == 4){
+					
+				}else if(location == 5){
+					tempList = db.viewAll(currentUser);
+					if(val > tempList.size() || val < 1){
+						return "Felaktigt kommando";
+					}else{
+						return db.viewSpecific(currentUser, tempList.get(val-1));
+					}
+				}
+				
+
 			}
-		}else{
-			
-		}
 		
+		}else{
+			return "Felaktigt kommando!";
+		}
+		return "";
+	}
+	
+	public int currentLocation(){
+		return location;
 	}
 
-	private boolean isValidOption(){
-		return false;
+	private boolean isValidOption(int val){
+		switch (val){
+			case 1:
+				return true;
+			case 2:
+				if(level == User.NURSE_LEVEL || level == User.DOCTOR_LEVEL){
+					return true;
+				}
+				return false;
+			case 3:
+				return false;
+			case 4:
+				if(level == User.DOCTOR_LEVEL){
+					return true;
+				}
+				return false;
+			case 5:
+				if(level == User.GOVERNMENT_LEVEL){
+					return true;
+				}
+				return false;
+			case 6:
+				return false;
+			case 7:
+				if(level == User.GOVERNMENT_LEVEL){
+					return true;
+				}
+				return false;
+			case 8:
+				return false;
+			case 9:
+				return false;
+			case 0:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	

@@ -128,7 +128,7 @@ public class Database {
 	}
 
 		
-	public void save(){
+	private void save(){
 		try {
 			FileWriter fileWriter = new FileWriter(fileName, false);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
