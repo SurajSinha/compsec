@@ -10,10 +10,19 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 public class NetworkClient {
+	
+	
+	class RequestResult 
+	{
+		public int i;
+		public String Text;	
+	}
+	
 	private static final int REQUEST = 2;
 	private static final int LOGIN = 1;
 	private static final int PORT = 12345;
 	private static final int ADD = 3;
+	private static final int EDIT = 4;
 	
 	private SSLSocket s;
 	private OutputStream out;
@@ -64,20 +73,17 @@ public class NetworkClient {
 		return b;
 	}
 	
-	public String request(String name){
+	public RequestResult request(int id){
 		try {
 			out.write(REQUEST);
-			byte[] data=(name).getBytes();
-			out.write(data.length);
-			out.write(data);
-			int len=in.read();
-			if(len>0)
-			{
-				byte[] res=read(len);
-				return new String(res);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			out.write(id);
+								
+			RequestResult r=new RequestResult();
+			r.i=in.read();
+			r.Text=readStr();
+			return r;
+			
+		} catch (IOException e) {			
 			e.printStackTrace();
 		}
 		
@@ -98,12 +104,28 @@ public class NetworkClient {
 		}
 		
 	}
+	public void edit(String d) {		
+		try {
+			out.write(EDIT);			
+			writeStr(d);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+	}
 	
 	private void writeStr(String str) throws IOException
 	{
 		byte[] data=str.getBytes();
 		out.write(data.length);
 		out.write(data);
+		
+	}
+	private String readStr() throws IOException
+	{
+		int len=in.read();
+		return new String(read(len));
 		
 	}
 	
@@ -125,6 +147,7 @@ public class NetworkClient {
 		return null;	
 	
 	}
+	
 	
 	
 	

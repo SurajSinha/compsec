@@ -3,6 +3,7 @@ package Server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -16,10 +17,20 @@ import javax.security.cert.X509Certificate;
 
 public class NetworkServer {
 
+	
+	class RequestResult 
+	{
+		public int i;
+		public String Text;
+		
+	
+	}
+	
 	private static final int PORT = 12345;
 	private static final int REQUEST = 2;
 	private static final int LOGIN = 1;
 	private static final int ADD = 3;
+	private static final int EDIT = 4;
 
 	OutputStream out;
 	InputStream in;
@@ -109,35 +120,35 @@ public class NetworkServer {
 							String rstr = readStr();
 							System.out.println(rstr);
 							if (isLoggedIn) {							
+								writeStr("hello");
 								
-								String text = "hello";
-								if(rstr.equals("ls"))
-								{
-									//text=db.viewAll(user);
-								}
-								else
-								{
-									
-								}
-								byte[] textdata = (text).getBytes();
 
-								out.write(textdata.length);
-								out.write(textdata);
 							} else {
 								out.write(0);
 							}
 							break;
 
 						case ADD:
+							
 							String ppn=readStr();
 							String pname=readStr();
 							String ps=readStr();
 							String pd=readStr();
-							if(user.getLevel()==User.DOCTOR_LEVEL)
+							db.add(user, new Record(ppn, pname, sjukhus, name, ps, pd));
+							break;
+						case EDIT:							
+							String diagnos=readStr();
+							int file=0;
+							ArrayList<Record> list=db.viewAllEditable(user);							
+							try
 							{
-								db.add(user, new Record(ppn, pname, sjukhus, name, ps, pd));
-								db.save();
+								Record r=list.get(file);
+								r.editDiagnose(diagnos);
+							}catch(IndexOutOfBoundsException e)
+							{
+								
 							}
+							break;
 							
 						default:
 							break;
@@ -156,7 +167,13 @@ public class NetworkServer {
 		}
 
 	}
-
+	private void writeStr(String str) throws IOException
+	{
+		byte[] data=str.getBytes();
+		out.write(data.length);
+		out.write(data);
+		
+	}
 	private String readStr() throws IOException
 	{
 		int len=in.read();

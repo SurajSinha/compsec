@@ -21,25 +21,28 @@ public class Main {
 					while(true)
 					{						
 						System.out.println("Enter request: ");
-						String cmd=s.next();
-						
-						if(cmd.equals("new"))
-						{
-							handleNew(s,cmd);
+						String cmd=s.next();						
+						int ci=-1;
+						try {
+							ci = Integer.parseInt(cmd);
+						} catch (NumberFormatException e) {	
 						}
-						else
-						{
+						NetworkClient.RequestResult res=client.request(ci);
 						
-							String res=client.request(cmd);
-							if(res!=null)
-							{
-								System.out.println(res);
-							}
-							else 
-							{
-								System.out.println("request failed.");
-							}
+						if(res.i==5)
+						{
+							System.out.println(res.Text);							
 						}
+						if(res.i==1)
+						{
+							handleNew(s);
+						}
+						if(res.i==2)
+						{
+							System.out.println(res.Text);
+							handleEdit(s);
+						}				
+						
 					}				
 					
 				}
@@ -57,7 +60,7 @@ public class Main {
 		
 	}
 	
-	static private void handleNew(Scanner s,String cmd)
+	static private void handleNew(Scanner s)
 	{
 		System.out.println("Personnummer: ");
 		s.nextLine();
@@ -72,7 +75,20 @@ public class Main {
 		System.out.println("Diagnos: ");
 		String d=s.nextLine();
 		
-		client.addNew(pn,name,s2,d);
+		System.out.println("Bekräfta(j/n");
+		if(s.next()=="j")		
+			client.addNew(pn,name,s2,d);
+	}
+	
+	static private void handleEdit(Scanner s)
+	{
+				
+		System.out.println("Ny diagnos: ");
+		String d=s.nextLine();		
+		
+		System.out.println("Bekräfta(j/n");
+		if(s.next()=="j")		
+			client.edit(d);
 	}
 	
 	
