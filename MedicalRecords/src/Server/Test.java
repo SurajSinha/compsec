@@ -6,12 +6,28 @@ public class Test {
 	public static void main(String[] args){
 		Log l = new Log();
 		Database db = new Database(l);
-		User u = new User("7911156673", "Anna Plåster", User.DOCTOR_LEVEL, "LUS");
+		User u = new User("7911156673", "Willhelm EKG", User.GOVERNMENT_LEVEL, "MAS");
 		
 		
-		db.load();
 		ArrayList<Record> list = new ArrayList<Record>();
-		System.out.println(db.viewAll(u));
+		
+		//Record r = new Record("7101056617", "Nisse Johansson", "LUS", "Per Injektion", "Anna Plåster", "Exem.");
+		//db.add(u, r);
+		list = db.viewAll(u);
+		System.out.println(db.displayString(list));
+		System.out.println("------------------------------");
+		//list = db.viewAllEditable(u);
+		//System.out.println(db.displayString(list));
+		
+		//db.delete(u, new Record("8403127819", "Per Johansson", "MAS", "Per Injektion", "Annika Krycka","Stukat finger."));
+		
+		//list = db.viewAll(u);
+		//System.out.println(db.displayString(list));
+		
+		System.out.println(list.get(0).toString());
+		
+		//l.addEvent("TEST", "TEST #2");
+		//System.out.println(l.load());
 		//System.out.println(list);
 		
 		/*//Record(int pnummer, String pnamn, String sjukhus, String doktor, String sköterska, String diagnos){

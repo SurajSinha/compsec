@@ -18,28 +18,32 @@ public class Database {
 	public Database(Log l){
 		this.list = new ArrayList<Record>();
 		this.log = l;
-		//load();
+		load();
 	}
 	
 	public void add(User u, Record r){
 		list.add(r);
 		log.addEvent("ADD", u.getName() + " (" + u.getPersonNumber()+") added a record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
+		save();
 	}
 	
-	public void delete(User u, int index, Record r){
-		list.remove(index);
-		log.addEvent("DELETE", u.getName() + " (" + u.getPersonNumber()+") added a record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
+	public void delete(User u, Record r){
+		list.remove(r);
+		log.addEvent("DELETE", u.getName() + " (" + u.getPersonNumber()+") removed a record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
+		save();
 	}
 	
-	public String viewSpecific(User u, int index){
-		return list.get(index).toString();
+	public String viewSpecific(User u, Record r){
+		//Record r = list.get(r);
+		log.addEvent("VIEW", u.getName() + " (" + u.getPersonNumber()+") viewed the record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
+		return r.toString();
 	}
 	
-	public String viewAll(User u){
+	public ArrayList<Record> viewAll(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
 		switch (u.getLevel()){
 			case User.GOVERNMENT_LEVEL:
-				return listString(list);
+				return list;
 			case User.DOCTOR_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
@@ -47,7 +51,7 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return listString(temp);
+				return temp;
 			case User.NURSE_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
@@ -55,7 +59,7 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return listString(temp);
+				return temp;
 			case User.PATIENT_LEVEL:
 				for(int i=0;i<list.size();i++){
 					Record tempRecord = list.get(i);
@@ -63,24 +67,24 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return listString(temp);
+				return temp;
 			default:
 				return null;
 		}
 			
 	}
 	
-	private String listString(ArrayList<Record> temp) {
+	public String displayString(ArrayList<Record> temp) {
 		String header = "#\tPersonnummer\tPatient\t\tSjukhus\t\tDoktor\t\tSköterska\n";
 		StringBuilder sb = new StringBuilder();
 		for(int i=0;i<temp.size();i++){
 			Record r = temp.get(i);
-			sb.append(i+"\t"+r.patientPersonnummer+"\t"+r.patientNamn+"\t"+r.sjukhus+"\t\t"+r.doktor+"\t"+r.sköterska+"\n");
+			sb.append((i+1)+"\t"+r.patientPersonnummer+"\t"+r.patientNamn+"\t"+r.sjukhus+"\t\t"+r.doktor+"\t"+r.sköterska+"\n");
 		}
 		return header + sb;
 	}
 
-	public String viewAllEditable(User u){
+	public ArrayList<Record> viewAllEditable(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
 		switch (u.getLevel()){
 			case User.DOCTOR_LEVEL:
@@ -90,13 +94,13 @@ public class Database {
 						temp.add(tempRecord);
 					}
 				}
-				return listString(temp);
+				return temp;
 			default:
 				return null;
 		}
 	}
 	
-	public void load(){
+	private void load(){
 		try{
 			FileInputStream fstream = new FileInputStream(fileName);
 			DataInputStream datastream = new DataInputStream(fstream);

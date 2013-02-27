@@ -58,6 +58,43 @@ public class Record {
 	public void editDiagnose(String diagnos){
 		this.diagnos = diagnos;
 	}
+
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((diagnos == null) ? 0 : diagnos.hashCode());
+//		result = prime
+//				* result
+//				+ ((patientPersonnummer == null) ? 0 : patientPersonnummer
+//						.hashCode());
+//		return result;
+//	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Record other = (Record) obj;
+		if (diagnos == null) {
+			if (other.diagnos != null)
+				return false;
+		} else if (patientPersonnummer == null) {
+			if (other.patientPersonnummer != null)
+				return false;
+		} else if (!diagnos.equals(other.diagnos) || !patientPersonnummer.equals(other.patientPersonnummer))
+			return false;
+//		if (patientPersonnummer == null) {
+//			if (other.patientPersonnummer != null)
+//				return false;
+//		} else if (!patientPersonnummer.equals(other.patientPersonnummer))
+//			return false;
+		return true;
+	}
 	
 	/*public static void main(String[] args){
 		Record r = new Record("19881113-1058","Kalle Andersson","Lunds Universitetssjukhus", "Per Injektion", "Annika Plåstra", "Patienten har visat symptom av malaria.\nAntibiotika utskivet.");
