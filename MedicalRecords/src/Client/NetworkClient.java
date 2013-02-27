@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -11,6 +13,7 @@ public class NetworkClient {
 	private static final int REQUEST = 2;
 	private static final int LOGIN = 1;
 	private static final int PORT = 12345;
+	private static final int ADD = 3;
 	
 	private SSLSocket s;
 	private OutputStream out;
@@ -39,7 +42,7 @@ public class NetworkClient {
 	public boolean login(String password){
 		try {
 			out.write(LOGIN);
-			byte[] data=(password).getBytes();
+			byte[] data=hash(password).getBytes();
 			out.write(data.length);
 			out.write(data);
 			int res=in.read();
@@ -80,4 +83,49 @@ public class NetworkClient {
 		
 		return null;
 	}
+	
+	public void addNew(String pn, String name, String s2, String d) {
+		try {
+			out.write(ADD);
+			writeStr(pn);
+			writeStr(name);
+			writeStr(s2);
+			writeStr(d);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void writeStr(String str) throws IOException
+	{
+		byte[] data=str.getBytes();
+		out.write(data.length);
+		out.write(data);
+		
+	}
+	
+	
+	private String hash(String str)
+	{
+		byte[] data=(str+"lalalagoodmorningstarshine").getBytes();
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA");
+			 md.update(data);
+			 byte[] b=md.digest();
+			 return new java.math.BigInteger(1, b).toString(16);			 
+			 
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;	
+	
+	}
+	
+	
+	
 }

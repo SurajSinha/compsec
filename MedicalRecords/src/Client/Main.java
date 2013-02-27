@@ -1,13 +1,15 @@
 package Client;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class Main {
 
+	static NetworkClient client=new NetworkClient();
 	static public void main(String[] args)
 	{
 		
-		NetworkClient client=new NetworkClient();
 		if(client.connect("localhost"))
 		{
 			while(true)
@@ -17,16 +19,26 @@ public class Main {
 				if(client.login(s.nextLine()))
 				{
 					while(true)
-					{
+					{						
 						System.out.println("Enter request: ");
-						String res=client.request(s.next());
-						if(res!=null)
+						String cmd=s.next();
+						
+						if(cmd.equals("new"))
 						{
-							System.out.println(res);
+							handleNew(s,cmd);
 						}
-						else 
+						else
 						{
-							System.out.println("request failed.");
+						
+							String res=client.request(cmd);
+							if(res!=null)
+							{
+								System.out.println(res);
+							}
+							else 
+							{
+								System.out.println("request failed.");
+							}
 						}
 					}				
 					
@@ -44,6 +56,26 @@ public class Main {
 		
 		
 	}
+	
+	static private void handleNew(Scanner s,String cmd)
+	{
+		System.out.println("Personnummer: ");
+		s.nextLine();
+		String pn=s.nextLine();
+		
+		System.out.println("Namn: ");
+		String name=s.nextLine();
+		
+		System.out.println("Sköterska: ");
+		String s2=s.nextLine();
+		
+		System.out.println("Diagnos: ");
+		String d=s.nextLine();
+		
+		client.addNew(pn,name,s2,d);
+	}
+	
+	
 	
 	
 }
