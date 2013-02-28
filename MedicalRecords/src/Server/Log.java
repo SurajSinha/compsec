@@ -6,8 +6,8 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.util.Date;
 
-import com.sun.crypto.provider.DESCipher;
 
 public class Log {
 	
@@ -24,7 +24,9 @@ public class Log {
 			FileWriter fileWriter = new FileWriter(fileName, true);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 			
-			bufferedWriter.append(event +";"+description+"\n");
+			Date d = new Date();
+			
+			bufferedWriter.append(d.toString() + ";" + event +";"+description+"\n");
 
 			bufferedWriter.close();
 			
@@ -52,13 +54,13 @@ public class Log {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return "Event\tInfo\n" + sb.toString();
+		return "Time\t\tEvent\tInfo\n" + sb.toString();
 	
 	}
 	
 	private String parseLine(String stuff){
 		String[] data = stuff.split(";");
-		return data[0] + "\t" + data[1];
+		return data[0] + "\t" + data[1] + "\t" + data[2];
 	}
 	
 //	public void save(){}
