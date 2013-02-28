@@ -9,14 +9,42 @@ public class Main {
 	static NetworkClient client=new NetworkClient();
 	static public void main(String[] args)
 	{
+		Scanner s=new Scanner(System.in);
 		
-		if(client.connect("localhost"))
+		int connectres;
+		if((connectres=client.connect("localhost"))>0)
 		{
+			
 			while(true)
 			{
-				System.out.println("Enter password: ");
-				Scanner s=new Scanner(System.in);
-				if(client.login(s.nextLine()))
+				
+				boolean loggedin=false;
+				
+				if(connectres==NetworkClient.CONNECT_NO_PASSWORD)
+				{
+					
+					System.out.println("New user!");
+					while(true){
+						System.out.println("Enter new password: ");
+						String p1=s.nextLine();
+						System.out.println("Enter password again: ");
+						String p2=s.nextLine();
+						if(p1.equals(p2))
+						{							
+							loggedin=client.login(p1);;
+							break;
+						}
+						else System.out.println("did not match");
+					}
+					
+						
+				}
+				if(!loggedin)
+				{					
+					System.out.println("Enter password: ");
+					loggedin=client.login(s.nextLine());
+				}
+				if(loggedin)
 				{
 					while(true)
 					{						

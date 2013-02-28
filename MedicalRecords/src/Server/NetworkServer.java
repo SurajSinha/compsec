@@ -15,6 +15,8 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.security.cert.X509Certificate;
 
+import Client.NetworkClient;
+
 public class NetworkServer {
 
 	
@@ -36,9 +38,11 @@ public class NetworkServer {
 	InputStream in;
 
 	Database db;
+	Passwords pw;
 	
-	public NetworkServer(Database db) {
+	public NetworkServer(Database db,Passwords pw) {
 		this.db=db;
+		this.pw=pw;
 	}
 	
 	private HashMap<String,String> bb(String name)
@@ -65,7 +69,7 @@ public class NetworkServer {
 			s.setNeedClientAuth(true);
 			while (true) {
 				try {
-					System.out.println("dfgdf");
+					System.out.println("server running");
 					SSLSocket client = (SSLSocket) s.accept();
 					System.out.println("accept");
 					out = client.getOutputStream();
@@ -84,10 +88,10 @@ public class NetworkServer {
 					{
 						System.out.println(e.getKey()+": "+e.getValue());
 					}
-					String name=certdata.get("CN");
-					String pn=certdata.get("O");
-					String sjukhus=certdata.get("L");
-					String level=certdata.get("ST");
+					String name=certdata.get("CN"); //Namn
+					String pn=certdata.get("O"); //personnummer
+					String sjukhus=certdata.get("L"); //sjukhus
+					String level=certdata.get("ST"); //nivå
 					int al;
 					try {
 						al=User.DOCTOR_LEVEL; //Integer.parseInt(level);
@@ -99,6 +103,8 @@ public class NetworkServer {
 				
 					boolean isLoggedIn=false;
 					//
+					
+					out.write(pw.hasPassword(pn)? NetworkClient.CONNECT_OK: NetworkClient.CONNECT_NO_PASSWORD);		 
 
 					while (true) {
 						int type = in.read();
@@ -107,7 +113,13 @@ public class NetworkServer {
 						switch (type) {
 						case LOGIN:							
 							String str = readStr();
-							if(true)
+							
+							if(!pw.hasPassword(pn))
+							{
+								pw.add(pn, str);
+							}
+							
+							if(pw.validateUser(pn, str))
 							{
 								isLoggedIn=true;
 								out.write(1);
