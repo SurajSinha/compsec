@@ -1,0 +1,17 @@
+Thu Feb 28 13:01:34 CET 2013;LOGIN FAIL;Doctor (1234567891) failed to login
+Thu Feb 28 13:01:41 CET 2013;LOGIN FAIL;Doctor (1234567891) failed to login
+Thu Feb 28 13:01:46 CET 2013;LOGIN SUCCESSFUL;Doctor (1234567891) logged in successfully
+Thu Feb 28 13:02:01 CET 2013;LOGOFF SUCCESSFUL;Doctor (1234567891) successfully logged out
+Thu Feb 28 13:02:01 CET 2013;CLIENT DISCONNECT;Doctor (1234567891) disconnected unexpectedly
+Thu Feb 28 13:03:36 CET 2013;LOGIN FAIL;Government (1234567890) failed to login
+Thu Feb 28 13:03:40 CET 2013;LOGIN SUCCESSFUL;Government (1234567890) logged in successfully
+Thu Feb 28 13:06:30 CET 2013;LOGOFF SUCCESSFUL;Government (1234567890) successfully logged out
+Thu Feb 28 13:06:30 CET 2013;CLIENT DISCONNECT;Government (1234567890) disconnected unexpectedly
+Thu Feb 28 13:07:19 CET 2013;LOGIN SUCCESSFUL;Patient (1234567893) logged in successfully
+Thu Feb 28 13:07:35 CET 2013;LOGOFF SUCCESSFUL;Patient (1234567893) successfully logged out
+Thu Feb 28 13:07:35 CET 2013;CLIENT DISCONNECT;Patient (1234567893) disconnected unexpectedly
+Thu Feb 28 13:10:58 CET 2013;LOGIN SUCCESSFUL;Patient (1234567893) logged in successfully
+Thu Feb 28 13:11:01 CET 2013;LOGOFF SUCCESSFUL;Patient (1234567893) successfully logged out
+Thu Feb 28 13:11:23 CET 2013;LOGIN FAIL;Patient (1234567893) failed to login
+Thu Feb 28 13:11:26 CET 2013;LOGIN SUCCESSFUL;Patient (1234567893) logged in successfully
+Thu Feb 28 13:11:31 CET 2013;CLIENT DISCONNECT;Patient (1234567893) disconnected unexpectedly

@@ -104,7 +104,8 @@ public class NetworkServer {
 					
 					out.write(pw.hasPassword(pn)? NetworkClient.CONNECT_OK: NetworkClient.CONNECT_NO_PASSWORD);		 
 
-					while (true) {
+					boolean running=true;
+					while (running) {
 						
 						int type = in.read();
 						
@@ -132,6 +133,11 @@ public class NetworkServer {
 							}
 							else
 							{
+								try {
+									Thread.sleep(2000);
+								} catch (InterruptedException e) {									
+									e.printStackTrace();
+								}
 								log.addEvent("LOGIN FAIL", user.getName() + " (" + user.getPersonNumber()+") failed to login");
 								out.write(0);								
 							}
@@ -179,6 +185,8 @@ public class NetworkServer {
 								{
 									log.addEvent("LOGOFF SUCCESSFUL", user.getName() + " (" + user.getPersonNumber()+") successfully logged out");
 									out.write(6);
+									running=false;
+									break;
 									
 								}
 								else
