@@ -1,6 +1,7 @@
 package Server;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Test {
 	public static void main(String[] args){
@@ -16,16 +17,48 @@ public class Test {
 		
 		Log l = new Log();
 		Database db = new Database(l);
-		User u = new User("7911156673", "Willhelm EKG", User.GOVERNMENT_LEVEL, "MAS");
+		User u = new User("7911156673", "Willhelm EKG", User.DOCTOR_LEVEL, "MAS");
 		
 		
 		ArrayList<Record> list = new ArrayList<Record>();
+
+		MenuSystem ms = new MenuSystem(u,db,l);
+		String out;
+		Scanner scan = new Scanner(System.in);
+		
+		do{
+			if(ms.currentLocation() == -5){
+				System.out.print("Vill du ta bort denna journal? (J/N)");
+				String val = scan.next();
+				if(val.equalsIgnoreCase("J")){
+					ms.command(1);
+				}else if(val.equalsIgnoreCase("N")){
+					ms.command(0);
+				}
+				
+			}else if(ms.currentLocation() == -4){
+				//Wait for new journal or cancel
+			}else if(ms.currentLocation() == -2){
+				//Wait for edit or cancel
+			}
+			
+			System.out.print(ms.getMenu());
+			if(ms.currentLocation() != 0){
+				System.out.print("Val (0 = föregående meny): ");
+			}else{
+				System.out.print("Val: ");
+			}
+			
+			int val = scan.nextInt();
+			out = ms.command(val);
+			System.out.println(out);
+		}while(!out.equals("EXIT"));
 		
 		//Record r = new Record("7101056617", "Nisse Johansson", "LUS", "Per Injektion", "Anna Plåster", "Exem.");
 		//db.add(u, r);
-		list = db.viewAll(u);
-		System.out.println(db.displayString(list));
-		System.out.println("------------------------------");
+		//list = db.viewAll(u);
+		//System.out.println(db.displayString(list));
+		//System.out.println("------------------------------");
 		//list = db.viewAllEditable(u);
 		//System.out.println(db.displayString(list));
 		
@@ -34,7 +67,7 @@ public class Test {
 		//list = db.viewAll(u);
 		//System.out.println(db.displayString(list));
 		
-		System.out.println(list.get(0).toString());
+		//System.out.println(list.get(0).toString());
 		
 		//l.addEvent("TEST", "TEST #2");
 		//System.out.println(l.load());
