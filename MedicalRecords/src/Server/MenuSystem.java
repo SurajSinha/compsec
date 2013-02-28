@@ -18,11 +18,11 @@ public class MenuSystem {
 	 */
 	
 	private int level;
-	private int location, prevLocation;
+	private int location, prevLocation, currentRecord;
 	private User currentUser;
 	private Database db;
 	private Log log;
-	private ArrayList<Record> lastList;
+//	private ArrayList<Record> lastList;
 	
 	public MenuSystem(User u, Database db, Log l){
 		this.currentUser = u;
@@ -32,7 +32,7 @@ public class MenuSystem {
 		location = 0;
 	}
 	
-	public String getMenu(ArrayList<Record> list){
+	public String getMenu(){
 		//lastList = list;
 		//OK -> 1
 		String mainHeader = "Huvudmeny:\n"+
@@ -83,11 +83,12 @@ public class MenuSystem {
 	public String command(int val){
 		ArrayList<Record> tempList;
 		
-		if(isValidOption(val) && location == 0){
+		//if(isValidOption(val) && location == 0){
+		if(isValidOption(val)){
 			if(val == 0){
 				if(location == 0){
-					//exit
-				}else if(location == -1){
+					return "EXIT";
+				}else if(location == -1 || location == -2 || location == -4 || location == -5){
 					location = prevLocation;
 				}else{
 					location = 0;
@@ -104,24 +105,44 @@ public class MenuSystem {
 					}else{
 						location = -1;
 						prevLocation = 1;
+						//currentRecord = val;
 						return db.viewSpecific(currentUser, tempList.get(val-1));
 					}
 				}else if(location == 2){
 					tempList = db.viewAllEditable(currentUser);
 					if(val > tempList.size() || val < 1){
-						return "Felaktigt kommando";
+						return "Felaktigt kommando!";
 					}else{
-						return db.viewSpecific(currentUser, tempList.get(val-1));
+						location = -2;
+						prevLocation = 2;
+						currentRecord = val-1;
+						return db.viewSpecific(currentUser, tempList.get(currentRecord));
 					}
+				}else if(location == -2){
+					
 				}else if(location == 4){
+					location = -4;
+					prevLocation = 4;
+				}else if(location == -4){
 					
 				}else if(location == 5){
 					tempList = db.viewAll(currentUser);
 					if(val > tempList.size() || val < 1){
 						return "Felaktigt kommando";
 					}else{
-						return db.viewSpecific(currentUser, tempList.get(val-1));
+						location = -5;
+						prevLocation = 5;
+						currentRecord = val-1;
+						return db.viewSpecific(currentUser, tempList.get(currentRecord));
 					}
+				}else if(location == -5){
+					tempList = db.viewAll(currentUser);
+					if(val == 1){
+						db.delete(currentUser, tempList.get(currentRecord));
+						this.command(0);
+					}
+				}else if(location == 7){
+					
 				}
 				
 
@@ -138,41 +159,45 @@ public class MenuSystem {
 	}
 
 	private boolean isValidOption(int val){
-		switch (val){
-			case 1:
-				return true;
-			case 2:
-				if(level == User.NURSE_LEVEL || level == User.DOCTOR_LEVEL){
+		if(location == 0){
+			switch (val){
+				case 1:
 					return true;
-				}
-				return false;
-			case 3:
-				return false;
-			case 4:
-				if(level == User.DOCTOR_LEVEL){
+				case 2:
+					if(level == User.NURSE_LEVEL || level == User.DOCTOR_LEVEL){
+						return true;
+					}
+					return false;
+				case 3:
+					return false;
+				case 4:
+					if(level == User.DOCTOR_LEVEL){
+						return true;
+					}
+					return false;
+				case 5:
+					if(level == User.GOVERNMENT_LEVEL){
+						return true;
+					}
+					return false;
+				case 6:
+					return false;
+				case 7:
+					if(level == User.GOVERNMENT_LEVEL){
+						return true;
+					}
+					return false;
+				case 8:
+					return false;
+				case 9:
+					return false;
+				case 0:
 					return true;
-				}
-				return false;
-			case 5:
-				if(level == User.GOVERNMENT_LEVEL){
-					return true;
-				}
-				return false;
-			case 6:
-				return false;
-			case 7:
-				if(level == User.GOVERNMENT_LEVEL){
-					return true;
-				}
-				return false;
-			case 8:
-				return false;
-			case 9:
-				return false;
-			case 0:
-				return true;
-			default:
-				return false;
+				default:
+					return false;
+			}
+		}else{
+			return true;
 		}
 	}
 
