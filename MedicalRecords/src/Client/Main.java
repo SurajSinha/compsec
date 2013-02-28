@@ -46,30 +46,21 @@ public class Main {
 				}
 				if(loggedin)
 				{
+					request(s,10000);
+					
 					while(true)
 					{						
-						System.out.println("Enter request: ");
+						System.out.println("Val (0 för att backa): ");
 						String cmd=s.next();						
 						int ci=-1;
 						try {
 							ci = Integer.parseInt(cmd);
 						} catch (NumberFormatException e) {	
 						}
-						NetworkClient.RequestResult res=client.request(ci);
-						
-						if(res.i==5)
-						{
-							System.out.println(res.Text);							
-						}
-						if(res.i==1)
-						{
-							handleNew(s);
-						}
-						if(res.i==2)
-						{
-							System.out.println(res.Text);
-							handleEdit(s);
-						}				
+						if(cmd.equalsIgnoreCase("j")) ci=1;
+						if(cmd.equalsIgnoreCase("n")) ci=0;
+							
+						request(s, ci);				
 						
 					}				
 					
@@ -87,6 +78,28 @@ public class Main {
 		
 		
 	}
+
+	private static void request(Scanner s, int ci) {
+		NetworkClient.RequestResult res=client.request(ci);
+		
+		if(res.i==5)
+		{
+			System.out.println(res.Text);							
+		}
+		if(res.i==1)
+		{
+			handleNew(s);
+		}
+		if(res.i==2)
+		{
+			System.out.println(res.Text);
+			handleEdit(s);
+		}
+		if(res.i==6)
+		{
+			System.exit(0);
+		}
+	}
 	
 	static private void handleNew(Scanner s)
 	{
@@ -103,20 +116,24 @@ public class Main {
 		System.out.println("Diagnos: ");
 		String d=s.nextLine();
 		
-		System.out.println("Bekräfta(j/n");
-		if(s.next()=="j")		
+		System.out.println("Bekräfta(j/n)");
+		if(s.next().equalsIgnoreCase("j"))		
 			client.addNew(pn,name,s2,d);
+		
+		request(s,0);
 	}
 	
 	static private void handleEdit(Scanner s)
 	{
 				
 		System.out.println("Ny diagnos: ");
+		s.nextLine();
 		String d=s.nextLine();		
 		
-		System.out.println("Bekräfta(j/n");
-		if(s.next()=="j")		
+		System.out.println("Bekräfta(j/n)");
+		if(s.next().equalsIgnoreCase("j"))	
 			client.edit(d);
+		request(s,0);
 	}
 	
 	

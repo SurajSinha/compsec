@@ -40,7 +40,7 @@ public class NetworkClient {
 		 SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
 		 
 		try {
-			s=(SSLSocket)factory.createSocket(host, PORT);
+			s=(SSLSocket)factory.createSocket(host, PORT);			
 			out=s.getOutputStream();
 			in=s.getInputStream();			
 			return in.read();
@@ -57,10 +57,9 @@ public class NetworkClient {
 	public boolean login(String password){
 		try {
 			out.write(LOGIN);
-			byte[] data=Passwords.hash(password).getBytes();
-			out.write(data.length);
-			out.write(data);
-			int res=in.read();
+		
+			writeStr(Passwords.hash(password));
+			int res=in.read();			
 			if(res>0)return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -82,7 +81,8 @@ public class NetworkClient {
 	public RequestResult request(int id){
 		try {
 			out.write(REQUEST);
-			out.write(id);
+			//out.write(id);
+			writeStr(Integer.toString(id));
 								
 			RequestResult r=new RequestResult();
 			r.i=in.read();
@@ -124,15 +124,39 @@ public class NetworkClient {
 	private void writeStr(String str) throws IOException
 	{
 		byte[] data=str.getBytes();
-		out.write(data.length);
+		writeInt(data.length);
 		out.write(data);
 		
 	}
 	private String readStr() throws IOException
 	{
-		int len=in.read();
+		int len=readInt();//in.read();
+		if(len==-1)throw new IOException();
 		return new String(read(len));
 		
+	}
+	
+	private int read() throws IOException {
+		int len=(in.read());		
+		if(len==-1)throw new IOException();
+		return len;
+	}
+	
+	private int readInt() throws IOException {
+		
+		int a=read();
+		int b=read();
+		int c=read();
+		int d=read();
+		
+		int len=((a)<<24) | ((b)<<16) | ((c)<<8) | (d);		
+		return len;
+	}
+	private void writeInt(int i) throws IOException {
+		out.write(i>>24);
+		out.write(i>>16);	
+		out.write(i>>8);	
+		out.write(i);			
 	}
 	
 	

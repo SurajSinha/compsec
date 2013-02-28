@@ -118,12 +118,12 @@ public class MenuSystem {
 						currentRecord = val-1;
 						return db.viewSpecific(currentUser, tempList.get(currentRecord));
 					}
-				}else if(location == -2){
+				//}else if(location == -2){
 					
-				}else if(location == 4){
-					location = -4;
-					prevLocation = 4;
-				}else if(location == -4){
+				//}else if(location == 4){
+				//	location = 0;
+				//	prevLocation = 0;
+				//}else if(location == -4){
 					
 				}else if(location == 5){
 					tempList = db.viewAll(currentUser);
@@ -200,7 +200,15 @@ public class MenuSystem {
 			return true;
 		}
 	}
-
+	
+	public int getPreviousLocation()
+	{
+		return prevLocation;
+	}
+	public int getCurrentRecord()
+	{
+		return currentRecord;
+	}
 	
 	
 }

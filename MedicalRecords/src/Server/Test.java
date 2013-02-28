@@ -17,7 +17,7 @@ public class Test {
 		
 		Log l = new Log();
 		Database db = new Database(l);
-		User u = new User("7911156673", "Willhelm EKG", User.DOCTOR_LEVEL, "MAS");
+		User u = new User("7911156673", "Willhelm EKG", User.GOVERNMENT_LEVEL, "MAS");
 		
 		
 		ArrayList<Record> list = new ArrayList<Record>();

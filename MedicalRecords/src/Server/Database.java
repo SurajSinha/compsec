@@ -38,6 +38,11 @@ public class Database {
 		log.addEvent("VIEW", u.getName() + " (" + u.getPersonNumber()+") viewed the record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
 		return r.toString();
 	}
+	public void edit(User u, Record r){		
+		log.addEvent("EDIT", u.getName() + " (" + u.getPersonNumber()+") edited a record for " + r.patientNamn + " (" + r.patientPersonnummer + ")" );
+		save();
+	}
+	
 	
 	public ArrayList<Record> viewAll(User u){
 		ArrayList<Record> temp = new ArrayList<Record>();
